@@ -7,6 +7,9 @@ public class GameLogic {
     private final Random random = new Random();
 
     public int validateGuess(String input) throws IllegalArgumentException {
+        if (input == null || input.trim().isEmpty()) {
+            throw new IllegalArgumentException("Input cannot be empty. Please enter a number between 1 and 100.");
+        }
         try {
             int guess = Integer.parseInt(input);
             if (guess < 1 || guess > 100) {
@@ -19,7 +22,24 @@ public class GameLogic {
     }
 
     public boolean checkGuessCorrectness(int guess) {
-        return guess == SECRET_NUMBER;
+        int randomNumber = random.nextInt(100) + 1;
+        if (randomNumber%2==0){
+            int[] primes = {2, 3, 5, 7, 11, 13};
+            int randomPrime = primes[random.nextInt(primes.length)];
+            randomNumber += randomPrime;
+        }
+        else {
+            randomNumber = reverseDigits(randomNumber);
+        }
+        if (randomNumber>=100){
+            randomNumber=randomNumber/2 ;
+        }
+        if (randomNumber<50){
+            randomNumber=randomNumber*2 ;
+        }
+
+
+        return guess == randomNumber;
     }
 
     public void generatePrefix(int guess) {
@@ -54,6 +74,11 @@ public class GameLogic {
         }
 
         System.out.println(prefix);  // Prints the prefix instead of returning it
+    }
+
+    private static int reverseDigits(int number) {
+        String reverseString = new StringBuilder(String.valueOf(number)).reverse().toString();
+        return Integer.parseInt(reverseString);
     }
 }
 
